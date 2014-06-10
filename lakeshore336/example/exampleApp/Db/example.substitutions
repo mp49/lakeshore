@@ -1,0 +1,18 @@
+
+file lakeshore336.template
+{
+pattern {P, PORT, ADDR, TEMPSCAN, SCAN}
+	{mkp:SE:LS, L0, 0, 1, 5}
+}
+
+file save_restoreStatus.db
+{
+pattern {P}
+        {mkp:CS:LS:}
+}
+
+file ioc_sns.db
+{
+pattern {IOCNAME}
+        {mkp:CS:LS}
+}

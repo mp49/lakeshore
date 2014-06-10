@@ -1,0 +1,326 @@
+################################################################
+#
+# Lakeshore 336/350 Temperature Controller template file.
+#
+# Macros:
+#   P - Prefix for PV name
+#   PORT - Bus/Port Address (eg. ASYN Port).
+#   ADDR - Address on the bus (optional)
+#   TEMPSCAN - SCAN rate for the temperature/voltage readings
+#   SCAN - SCAN rate for non-temperature/voltage parameters.
+#   ADEL (optional) - Archive deadband for temperatures
+#   MDEL (optional) - Monitor deadband for temperatures
+#
+# Notes: The loop dependant PVs are in a seperate template file, included in this one.
+#
+# Matt Pearson, June 2013
+#
+# June 2014 - modified to support Lakeshore 350. The 350 is almost
+#             identical to the 336 so I just had to modify menu
+#             options. I also added in support for the 3062 option card.
+#
+################################################################
+
+record(bo, "$(P):DISABLE") {
+  field(DESC, "Disable set records")
+  field(PINI, "YES")
+  field(VAL, "0")
+  field(OMSL, "supervisory")
+  field(ZNAM, "Set Enabled")
+  field(ONAM, "Set Disabled")
+  field(ZSV, "NO_ALARM")
+  field(OSV, "MAJOR")
+}
+
+record(bo, "$(P):DISABLE_POLL") {
+  field(DESC, "Disable polling")
+  field(PINI, "YES")
+  field(VAL, "0")
+  field(OMSL, "supervisory")
+  field(ZNAM, "Poll Enabled")
+  field(ONAM, "Poll Disabled")
+  field(ZSV, "NO_ALARM")
+  field(OSV, "MAJOR")
+}
+
+################################################################
+# Read records
+################################################################
+
+## 
+## Read the ID string from the device.
+##
+record(stringin, "$(P):ID") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE")
+  field(INP, "@ls336.proto getID $(PORT) $(ADDR)")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+}
+
+## 
+## Read the model number from the device.
+##
+record(stringin, "$(P):MODEL") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE")
+  field(INP, "@ls336.proto getMODEL $(PORT) $(ADDR)")
+  field(SCAN, "I/O Intr")
+}
+
+## 
+## Read the serial number from the device.
+##
+record(stringin, "$(P):SERIAL") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE")
+  field(INP, "@ls336.proto getSERIAL $(PORT) $(ADDR)")
+  field(SCAN, "I/O Intr")
+}
+
+## 
+## Read the firmware from the device.
+##
+record(stringin, "$(P):FIRMWARE") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE")
+  field(INP, "@ls336.proto getFIRMWARE $(PORT) $(ADDR)")
+  field(SCAN, "I/O Intr")
+}
+
+## 
+## Read the temperature on channel 0 in Kelvin.
+##  
+record(ai, "$(P):KRDG0") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(DESC, "Channel 0 temperature")
+  field(INP, "@ls336.proto getKRDG(A) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "K")
+  field(HHSV,"MAJOR")
+  field(HSV, "MINOR")
+  field(LSV, "MINOR")
+  field(LLSV,"MAJOR")
+  field(HYST,"1.0")
+  field(HIHI,"1000")
+  field(HIGH,"1000")
+  field(LOW,"-1")
+  field(LOLO,"-1")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
+}
+
+## 
+## Read the temperature on channel 1 in Kelvin.
+## 
+record(ai, "$(P):KRDG1") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(DESC, "Channel 1 temperature")
+  field(INP, "@ls336.proto getKRDG(B) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "K")
+  field(HHSV,"MAJOR")
+  field(HSV, "MINOR")
+  field(LSV, "MINOR")
+  field(LLSV,"MAJOR")
+  field(HYST,"1.0")
+  field(HIHI,"1000")
+  field(HIGH,"1000")
+  field(LOW,"-1")
+  field(LOLO,"-1")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
+}
+
+## 
+## Read the temperature on channel 2 in Kelvin.
+##
+record(ai, "$(P):KRDG2") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(DESC, "Channel 2 temperature")
+  field(INP, "@ls336.proto getKRDG(C) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "K")
+  field(HHSV,"MAJOR")
+  field(HSV, "MINOR")
+  field(LSV, "MINOR")
+  field(LLSV,"MAJOR")
+  field(HYST,"1.0")
+  field(HIHI,"1000")
+  field(HIGH,"1000")
+  field(LOW,"-1")
+  field(LOLO,"-1")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
+}
+
+## 
+## Read the temperature on channel 3 in Kelvin.
+##
+record(ai, "$(P):KRDG3") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(DESC, "Channel 3 temperature")
+  field(INP, "@ls336.proto getKRDG(D) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "K")
+  field(HHSV,"MAJOR")
+  field(HSV, "MINOR")
+  field(LSV, "MINOR")
+  field(LLSV,"MAJOR")
+  field(HYST,"1.0")
+  field(HIHI,"1000")
+  field(HIGH,"1000")
+  field(LOW,"-1")
+  field(LOLO,"-1")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
+}
+
+## 
+## Read the raw voltage on channel 0.
+##
+record(ai, "$(P):SRDG0") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(INP, "@ls336.proto getSRDG(A) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "V")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+}
+
+## 
+## Read the raw voltage on channel 1.
+##
+record(ai, "$(P):SRDG1") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(INP, "@ls336.proto getSRDG(B) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "V")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+}
+
+## 
+## Read the raw voltage on channel 2.
+##
+record(ai, "$(P):SRDG2") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(INP, "@ls336.proto getSRDG(C) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "V")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+}
+
+## 
+## Read the raw voltage on channel 3.
+##
+record(ai, "$(P):SRDG3") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(INP, "@ls336.proto getSRDG(D) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "V")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+}
+
+
+## 
+## Read the tuning status from the device.
+##
+#record(stringin, "$(P):TUNEST") {
+#  field(DTYP, "stream")
+#  field(SDIS, "$(P):DISABLE_POLL")
+#  field(INP, "@ls336.proto getTUNEST $(PORT) $(ADDR)")
+#  field(SCAN, "$(SCAN) second")
+#}
+
+## 
+## Read the tuning status success parameter
+##
+#record(bi, "$(P):TUNESTSUCCESS") {
+#  field(DTYP, "stream")
+#  field(SDIS, "$(P):DISABLE_POLL")
+#  field(INP, "@ls336.proto getTUNESTSUCCESS $(PORT) $(ADDR)")
+#  field(SCAN, "$(SCAN) second")
+#  field(ZNAM, "No Error")
+#  field(ONAM, "Error (see manual)")
+#}
+
+
+################################################################
+# Include 3062 option 
+################################################################
+
+include "lakeshore_option_3062.template"
+
+
+################################################################
+# Write records
+################################################################
+
+
+
+
+
+
+################################################################
+# Now include the loop dependant records, for outputs 1, 2, 3 and 4.
+# The common records are in lakeshore336output.template.
+################################################################
+
+substitute "OUT=1"
+include "lakeshore336output.template"
+include "lakeshore336loop.template"
+
+substitute "OUT=2"
+include "lakeshore336output.template"
+include "lakeshore336loop.template"
+
+substitute "OUT=3"
+include "lakeshore336output.template"
+include "lakeshore336analog.template"
+
+substitute "OUT=4"
+include "lakeshore336output.template"
+include "lakeshore336analog.template"
+
+substitute "OUT=3"
+include "lakeshore336zone_analog.template"
+
+substitute "OUT=4"
+include "lakeshore336zone_analog.template"
+
+##
+## Generic Asyn record for reading parameters.
+##
+record(asyn,"$(P):ASYN")
+{
+    field(DTYP,"asynRecordDevice")
+    field(PORT,"$(PORT)")
+    field(ADDR,"$(ADDR)")
+    field(OMAX,"1024")
+    field(IMAX,"1024")
+    field(OEOS,"\r\n")
+    field(IEOS,"\r\n")
+}

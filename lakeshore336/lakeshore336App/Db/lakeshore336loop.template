@@ -1,0 +1,103 @@
+# This is included in lakeshore336.template
+# This template is for outputs 1 and 2, which can provide heater power.
+
+################################################################
+# Read records
+################################################################
+
+## 
+## Read the heater output value.
+##
+record(ai, "$(P):HTR$(OUT)") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(INP, "@ls336.proto getHTR($(OUT)) $(PORT) $(ADDR)")
+  field(SCAN, "$(SCAN) second")
+  field(PREC, "1")
+  field(EGU, "%")
+}
+
+## 
+## Define the strings and values for this record.
+##
+record(mbbi, "$(P):RANGE$(OUT)") {
+  field(ZRST, "Off")
+  field(ONST, "Range1/Low")
+  field(TWST, "Range2/Medium")
+  field(THST, "Range3/High")
+  field(FRST, "Range4")	
+  field(FVST, "Range5")
+}
+
+##
+## Define the strings and values for this record.
+##
+record(mbbi, "$(P):OMM$(OUT)") {
+  field(ZRST, "Off")
+  field(ONST, "Closed Loop PID")
+  field(TWST, "Zone")
+  field(THST, "Open Loop")
+}
+
+## 
+## Define the strings and values for this record.
+##
+record(mbbo, "$(P):RANGE_S$(OUT)") {
+  field(ZRST, "Off")
+  field(ONST, "Range1/Low")
+  field(TWST, "Range2/Medium")
+  field(THST, "Range3/High")
+  field(FRST, "Range4")	
+  field(FVST, "Range5")
+}
+
+##
+## Define the strings and values for this record.
+##
+record(mbbo, "$(P):OMM_S$(OUT)") {
+  field(ZRST, "Off")
+  field(ONST, "Closed Loop PID")
+  field(TWST, "Zone")
+  field(THST, "Open Loop")
+}
+
+###############################################
+# Add in ZONE support
+###############################################
+
+substitute "ZONE=1"
+include "lakeshore336zone.template"
+
+substitute "ZONE=2"
+include "lakeshore336zone.template"
+
+substitute "ZONE=2"
+include "lakeshore336zone.template"
+
+substitute "ZONE=3"
+include "lakeshore336zone.template"
+
+substitute "ZONE=4"
+include "lakeshore336zone.template"
+
+substitute "ZONE=5"
+include "lakeshore336zone.template"
+
+substitute "ZONE=6"
+include "lakeshore336zone.template"
+
+substitute "ZONE=7"
+include "lakeshore336zone.template"
+
+substitute "ZONE=8"
+include "lakeshore336zone.template"
+
+substitute "ZONE=9"
+include "lakeshore336zone.template"
+
+substitute "ZONE=10"
+include "lakeshore336zone.template"
+
+
+
+
