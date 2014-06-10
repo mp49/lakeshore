@@ -3,16 +3,16 @@ lakeshore
 
 EPICS support for the Lakeshore 336/350 series controllers 
 
+[Lakeshore 336](http://www.lakeshore.com/products/cryogenic-temperature-controllers/model-336/Pages/Overview.aspx)
+
+[Lakeshore 350](http://www.lakeshore.com/products/cryogenic-temperature-controllers/model-350/Pages/Overview.aspx)
+
 The 336 controller is almost identical to the 350, and the same
 software can be used for both. Where the settings do differ this 
 module provides generic menu options that apply to both controllers.
 
 The module can also support the extra inputs supplied by the 3062
 option card. 
-
-[Lakeshore 336](http://www.lakeshore.com/products/cryogenic-temperature-controllers/model-336/Pages/Overview.aspx)
-
-[Lakeshore 350](http://www.lakeshore.com/products/cryogenic-temperature-controllers/model-350/Pages/Overview.aspx)
 
 The EPICS support is entirely based on [Asyn](http://www.aps.anl.gov/epics/modules/soft/asyn/) and [Stream Device](http://epics.web.psi.ch/software/streamdevice/).
 
