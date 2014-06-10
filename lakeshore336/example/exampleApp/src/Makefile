@@ -35,25 +35,6 @@ example_LIBS += stream
 example_LIBS += autosave
 example_LIBS += devIocStats
 
-# NOTE: To build SNL programs, SNCSEQ must be defined
-# in the <top>/configure/RELEASE file
-
-ifneq ($(SNCSEQ),)
-    # Build sncExample into exampleSupport
-    sncExample_SNCFLAGS += +r
-    example_DBD += sncExample.dbd
-    exampleSupport_SRCS += sncExample.stt
-    exampleSupport_LIBS += seq pv
-    example_LIBS += seq pv
-
-    # Build sncProgram as a standalone program
-    PROD_HOST += sncProgram
-    sncProgram_SNCFLAGS += +m
-    sncProgram_SRCS += sncProgram.st
-    sncProgram_LIBS += seq pv
-    sncProgram_LIBS += $(EPICS_BASE_HOST_LIBS)
-endif
-
 # Finally link to the EPICS Base libraries
 example_LIBS += $(EPICS_BASE_IOC_LIBS)
 

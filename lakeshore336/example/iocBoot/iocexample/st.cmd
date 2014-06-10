@@ -22,13 +22,13 @@ dbLoadRecords "db/example.db"
 #################################################
 # autosave
 
-epicsEnvSet("IOCNAME","ls336example")
-epicsEnvSet("SAVE_DIR","/tmp/ls336example")
+epicsEnvSet("IOCNAME","lakeshore")
+epicsEnvSet("SAVE_DIR","/tmp/lakeshore")
 
 save_restoreSet_Debug(0)
 
 ### status-PV prefix, so save_restore can find its status PV's.
-save_restoreSet_status_prefix("mkp:ls336:")
+save_restoreSet_status_prefix("BL9:CS:LS:")
 
 set_requestfile_path("$(SAVE_DIR)")
 set_savefile_path("$(SAVE_DIR)")

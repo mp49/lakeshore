@@ -19,20 +19,18 @@
 # Build settings that are NOT module paths should appear in a
 # CONFIG_SITE file.
 
--include $(TOP)/../../../../setup_release
-SUPPORT=$(EPICS_SUPPORT)
-
 TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
-# If using the sequencer, point SNCSEQ at its top directory:
-#SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
+EPICS=/home/controls/epics/R3.14.12.2
+SUPPORT=$(EPICS)/support
 
 ASYN=		$(SUPPORT)/asyn
 STREAMDEVICE=	$(SUPPORT)/StreamDevice
 LAKESHORE336=	$(SUPPORT)/lakeshore/lakeshore336
-LAKESHORE350=	$(SUPPORT)/lakeshore/lakeshore350
 DEVIOCSTATS=    $(SUPPORT)/devIocStats
 AUTOSAVE=       $(SUPPORT)/autosave
+
+EPICS_BASE=$(EPICS)/base
 
 # Set RULES here if you want to take build rules from somewhere
 # other than EPICS_BASE:
