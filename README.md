@@ -1,5 +1,4 @@
-lakeshore
-=========
+## lakeshore
 
 EPICS support for the Lakeshore 336/350 series controllers 
 
@@ -22,20 +21,18 @@ The module provides support for:
 * Support for reading 3062 option card inputs
 * Setting up channel output parameters such as setpoint and ramp rate
 * Reading back channel output parameters
-* Support for 2 PID loop outputs and 2 analog outputs
+* Support for 4 PID loop outputs, including 2 analog outputs
 * Support for setting ZONE parameters for all 4 output channels
 * Channel access put_callback support when setting parameters
 * Set of CS-Studio BOY screens
 
-Building lakeshore
-==================
+### Building lakeshore
 
 The lakeshore336 directory can be build as a standard EPICS support
 module. You may have to edit the files in the configure directory
 for your local site.
 
-Building an IOC using lakeshore
-===============================
+### Building an IOC using lakeshore
 
 Include the lakeshore support in the IOC configure/RELEASE file, and 
 either instantiate the EPICS database in the IOC startup script or in a
