@@ -24,6 +24,7 @@ record(ai, "$(P):SETP$(OUT)") {
   field(SCAN, "$(TEMPSCAN) second")
   field(PREC, "3")
   field(EGU, "K")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
