@@ -26,6 +26,15 @@ The module provides support for:
 * Channel access put_callback support when setting parameters
 * Set of CS-Studio BOY screens
 
+### Release history
+
+1-0: 
+Original release.
+
+1-1: 
+Add support for setting and reading input sensor descriptions (and related GUI OPI changes). 
+Factor out common records for input sensors into new template file (lakeshore_input.template). 
+
 ### Building lakeshore
 
 The lakeshore336 directory can be build as a standard EPICS support
