@@ -24,6 +24,7 @@ The module provides support for:
 * Support for 4 PID loop outputs, including 2 analog outputs
 * Support for setting ZONE parameters for all 4 output channels
 * Channel access put_callback support when setting parameters
+* Support for setting and reading input sensor descriptions
 * Set of CS-Studio BOY screens
 
 ### Release history
