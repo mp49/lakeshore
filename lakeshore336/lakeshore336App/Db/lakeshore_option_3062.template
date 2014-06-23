@@ -19,194 +19,25 @@ record(bo, "$(P):DISABLE_3062") {
   field(OSV, "MAJOR")
 }
 
-## 
-## Read the temperature on channel D1 in Kelvin.
-##  
-record(ai, "$(P):KRDGD1") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(DESC, "Channel D1 temperature")
-  field(INP, "@ls336.proto getKRDG(D1) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
+substitute "DISABLE=$(P):DISABLE_3062"
 
-## 
-## Read the temperature on channel D2 in Kelvin.
-##  
-record(ai, "$(P):KRDGD2") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(DESC, "Channel D2 temperature")
-  field(INP, "@ls336.proto getKRDG(D2) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
+substitute "INPUT=D1"
+substitute "INDEX=D1"
+include "lakeshore_input.template"
 
-## 
-## Read the temperature on channel D3 in Kelvin.
-##  
-record(ai, "$(P):KRDGD3") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(DESC, "Channel D3 temperature")
-  field(INP, "@ls336.proto getKRDG(D3) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
+substitute "INPUT=D2"
+substitute "INDEX=D2"
+include "lakeshore_input.template"
 
-## 
-## Read the temperature on channel D4 in Kelvin.
-##  
-record(ai, "$(P):KRDGD4") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(DESC, "Channel D4 temperature")
-  field(INP, "@ls336.proto getKRDG(D4) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
+substitute "INPUT=D3"
+substitute "INDEX=D3"
+include "lakeshore_input.template"
 
-## 
-## Read the temperature on channel D5 in Kelvin.
-##  
-record(ai, "$(P):KRDGD5") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(DESC, "Channel D5 temperature")
-  field(INP, "@ls336.proto getKRDG(D5) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
+substitute "INPUT=D4"
+substitute "INDEX=D4"
+include "lakeshore_input.template"
 
-## 
-## Read the raw voltage on channel D1.
-##
-record(ai, "$(P):SRDGD1") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(INP, "@ls336.proto getSRDG(D1) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel D2.
-##
-record(ai, "$(P):SRDGD2") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(INP, "@ls336.proto getSRDG(D2) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel D3.
-##
-record(ai, "$(P):SRDGD3") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(INP, "@ls336.proto getSRDG(D3) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel D4.
-##
-record(ai, "$(P):SRDGD4") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(INP, "@ls336.proto getSRDG(D4) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel D5.
-##
-record(ai, "$(P):SRDGD5") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_3062")
-  field(INP, "@ls336.proto getSRDG(D5) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
+substitute "INPUT=D5"
+substitute "INDEX=D5"
+include "lakeshore_input.template"
 

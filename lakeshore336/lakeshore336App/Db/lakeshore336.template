@@ -19,6 +19,10 @@
 #             identical to the 336 so I just had to modify menu
 #             options. I also added in support for the 3062 option card.
 #
+# June 2014 - factor out input sensor records into lakeshore_input.template
+#             and add support for reading input sensor descriptions. This
+#             is also used in lakeshore_option_3062.template.
+#
 ################################################################
 
 record(bo, "$(P):DISABLE") {
@@ -88,162 +92,6 @@ record(stringin, "$(P):FIRMWARE") {
   field(SCAN, "I/O Intr")
 }
 
-## 
-## Read the temperature on channel 0 in Kelvin.
-##  
-record(ai, "$(P):KRDG0") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(DESC, "Channel 0 temperature")
-  field(INP, "@ls336.proto getKRDG(A) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
-
-## 
-## Read the temperature on channel 1 in Kelvin.
-## 
-record(ai, "$(P):KRDG1") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(DESC, "Channel 1 temperature")
-  field(INP, "@ls336.proto getKRDG(B) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
-
-## 
-## Read the temperature on channel 2 in Kelvin.
-##
-record(ai, "$(P):KRDG2") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(DESC, "Channel 2 temperature")
-  field(INP, "@ls336.proto getKRDG(C) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
-
-## 
-## Read the temperature on channel 3 in Kelvin.
-##
-record(ai, "$(P):KRDG3") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(DESC, "Channel 3 temperature")
-  field(INP, "@ls336.proto getKRDG(D) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "K")
-  field(HHSV,"MAJOR")
-  field(HSV, "MINOR")
-  field(LSV, "MINOR")
-  field(LLSV,"MAJOR")
-  field(HYST,"1.0")
-  field(HIHI,"1000")
-  field(HIGH,"1000")
-  field(LOW,"-1")
-  field(LOLO,"-1")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL") 
-}
-
-## 
-## Read the raw voltage on channel 0.
-##
-record(ai, "$(P):SRDG0") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(INP, "@ls336.proto getSRDG(A) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "V")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel 1.
-##
-record(ai, "$(P):SRDG1") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(INP, "@ls336.proto getSRDG(B) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "V")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel 2.
-##
-record(ai, "$(P):SRDG2") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(INP, "@ls336.proto getSRDG(C) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "V")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
-## 
-## Read the raw voltage on channel 3.
-##
-record(ai, "$(P):SRDG3") {
-  field(DTYP, "stream")
-  field(SDIS, "$(P):DISABLE_POLL")
-  field(INP, "@ls336.proto getSRDG(D) $(PORT) $(ADDR)")
-  field(SCAN, "$(TEMPSCAN) second")
-  field(PREC, "3")
-  field(EGU, "V")
-  field(ADEL, "$(ADEL=1)")
-  field(MDEL, "$(MDEL=1)")
-}
-
 
 ## 
 ## Read the tuning status from the device.
@@ -267,22 +115,35 @@ record(ai, "$(P):SRDG3") {
 #  field(ONAM, "Error (see manual)")
 #}
 
+################################################################
+# Input sensor records
+################################################################
+
+substitute "DISABLE=$(P):DISABLE_POLL"
+
+substitute "INPUT=A"
+substitute "INDEX=0"
+include "lakeshore_input.template"
+
+substitute "INPUT=B"
+substitute "INDEX=1"
+include "lakeshore_input.template"
+
+substitute "INPUT=C"
+substitute "INDEX=2"
+include "lakeshore_input.template"
+
+substitute "INPUT=D"
+substitute "INDEX=3"
+include "lakeshore_input.template"
+
+################################################################
 
 ################################################################
 # Include 3062 option 
 ################################################################
 
 include "lakeshore_option_3062.template"
-
-
-################################################################
-# Write records
-################################################################
-
-
-
-
-
 
 ################################################################
 # Now include the loop dependant records, for outputs 1, 2, 3 and 4.

@@ -5,9 +5,9 @@
 # Protocol file for Lakeshore 336
 # Diamond Light Source, June 2010
 #
-# Add more functions
-# Oak Ridge National Lab, June 2013
-#
+# Oak Ridge National Lab, UT-Battelle, 2013-2014.
+# Add more commands.
+# 
 ##################################################
 
 
@@ -168,6 +168,12 @@ getZONE {
    in "%f";
 }
 
+# /// Read the input sensor name
+getINNAME {
+   out "INNAME? \$1";
+   in "%#s";
+}
+
 
 #######################################################
 # Set functions
@@ -250,4 +256,10 @@ setATUNE {
 # /// Set the ZONE parameters
 setZONE {
   out "ZONE \$1,\$2,%(A)f,%(B)f,%(C)f,%(D)f,%(E)f,%(F)d,%(G)d,%(H)f";
+}
+
+# /// Set the input sensor name
+setINNAME {
+  out "INNAME \$1,\"%s\"";
+  @init { getINNAME; }
 }

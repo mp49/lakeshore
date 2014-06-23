@@ -1,0 +1,74 @@
+
+# Template to provide the records required for an input. 
+# This makes use of the macros required by lakeshore336.template
+# but also requires macros to specify the input channel and index.
+# The index is to provide a way for the developer to use a different
+# channel naming scheme.
+#
+# Macros:
+# INPUT - A to D, or D1 to D5
+# INDEX - Index to use for the input channel PV name and DESC (eg. 0 to 3)
+# DISABLE - PV name to use for SDIS
+
+## 
+## Read the temperature on channel $(INDEX) in Kelvin.
+##  
+record(ai, "$(P):KRDG$(INDEX)") {
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(DESC, "Channel $(INDEX) Temperature")
+  field(INP, "@ls336.proto getKRDG($(INPUT)) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "K")
+  field(HHSV,"MAJOR")
+  field(HSV, "MINOR")
+  field(LSV, "MINOR")
+  field(LLSV,"MAJOR")
+  field(HYST,"1.0")
+  field(HIHI,"1000")
+  field(HIGH,"1000")
+  field(LOW,"-1")
+  field(LOLO,"-1")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL")
+  info(archive, "Monitor, 00:00:01, VAL")   
+}
+
+## 
+## Read the raw voltage on channel $(INDEX).
+##
+record(ai, "$(P):SRDG$(INDEX)") {
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(INP, "@ls336.proto getSRDG($(INPUT)) $(PORT) $(ADDR)")
+  field(SCAN, "$(TEMPSCAN) second")
+  field(PREC, "3")
+  field(EGU, "V")
+  field(ADEL, "$(ADEL=1)")
+  field(MDEL, "$(MDEL=1)")
+}
+
+##
+## Set sensor $(INDEX) name 
+##
+record(stringout, "$(P):INNAME_S$(INDEX)") {
+  field(DESC, "Input $(INDEX) Name")
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE")
+  field(OUT, "@ls336.proto setINNAME($(INPUT)) $(PORT) $(ADDR)")
+  field(FLNK, "$(P):INNAME$(INDEX).PROC CA")
+}
+
+## 
+## Read input sensor $(INDEX) name
+##
+record(stringin, "$(P):INNAME$(INDEX)") {
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE")
+  field(INP, "@ls336.proto getINNAME($(INPUT)) $(PORT) $(ADDR)")
+  field(PINI, "YES")
+  field(SCAN, "Passive")
+}
+
