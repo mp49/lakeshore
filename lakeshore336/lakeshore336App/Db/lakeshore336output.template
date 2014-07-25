@@ -1,5 +1,24 @@
 # This is included in lakeshore336.template
 # This template is for the common functionality shared by all 4 outputs.
+#
+# There is some logic in this database to provide put_callback functionality
+# for setting the temperature and waiting for it to be in range. The input
+# sensor PV name used for the in-window calculation changes depending on
+# the input sensor selected. In order for this to work it requires the following
+# macros:
+#
+# INPUTA - Sensor 1 PV name
+# INPUTB - Sensor 2 PV name
+# INPUTC - Sensor 3 PV name
+# INPUTD - Sensor 4 PV name
+# INPUTD2 - Sensor D2 PV name
+# INPUTD3 - Sensor D3 PV name
+# INPUTD4 - Sensor D4 PV name
+# INPUTD5 - Sensor D5 PV name
+# TOLERANCE (optional - defaults to 1)
+# 
+# The input link names must fit into a stringout record for this to work.
+# The above link names default to a dummy record.
 
 ################################################################
 # Read records
@@ -182,9 +201,250 @@ record(ao, "$(P):SETP_S$(OUT)") {
   field(DESC, "Setpoint temperature")
   field(OUT, "@ls336.proto setSETP($(OUT)) $(PORT) $(ADDR)")
   field(PREC, "3")
-  field(FLNK, "$(P):SETP$(OUT).PROC CA")
+  field(FLNK, "$(P):SETP_S$(OUT)_BUSYSET.PROC")
   field(EGU, "K")
 }
+
+###############################################################################
+
+##
+## A few records to support put_callback on the setpoint. We use the busy record.
+## A temperature window is used, and a timer. The temperature must be within
+## the window, and the timer must have expired, before the callback is done.
+##
+
+record(dfanout, "$(P):SETP_S$(OUT)_BUSYSET")
+{
+   field(VAL, "1")
+   field(OUTA, "$(P):SETP_S$(OUT)_BUSY PP")
+   field(OUTB, "$(P):SETP$(OUT).PROC CA")
+   field(FLNK, "$(P):CALC_IN_WINDOW$(OUT).PROC")
+}
+record(busy, "$(P):SETP_S$(OUT)_BUSY")
+{
+}
+record(calcout, "$(P):CALC_IN_WINDOW$(OUT)") {
+  field(PINI, "YES")
+  field(INPA, "$(TOLERANCE=1)")
+  field(INPB, "$(P):DUMMY$(OUT).VAL CP")
+  field(INPC, "$(P):SETP$(OUT).VAL CP")
+  field(CALC, "((B>=(C-A))&&(B<=(C+A)))?1:0")
+  field(OOPT, "Every Time")
+  field(OUT, "$(P):IN_WINDOW$(OUT).VAL PP")
+  field(DOPT, "Use CALC")
+  field(FLNK, "$(P):CALC_TIME_IN_WINDOW$(OUT).PROC")
+  info(autosaveFields, "A")
+}
+record(bo, "$(P):IN_WINDOW$(OUT)") {
+  field(DESC, "Temperature In Window")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(OMSL, "supervisory")
+  field(ZNAM, "Not In Window")
+  field(ONAM, "In Window")
+  field(FLNK, "$(P):START_TIMER$(OUT).PROC")
+}
+
+##
+## Enable timer when we transition to IN_WINDOW$(OUT)=1
+##
+record(calcout, "$(P):START_TIMER$(OUT)") {
+  field(INPA, "$(P):IN_WINDOW$(OUT).VAL NPP")
+  field(CALC, "(A=1)")  
+  field(OOPT, "Transition To Non-zero")
+  field(OUT, "$(P):START_TIMER$(OUT)_DFANOUT.PROC PP")
+}
+record(dfanout, "$(P):START_TIMER$(OUT)_DFANOUT") {
+  field(VAL, "0")
+  field(OUTA, "$(P):TIME_IN_WINDOW$(OUT).VAL PP")
+  field(OUTB, "$(P):TIME_IN_WINDOW$(OUT).A PP")
+  field(OUTC, "$(P):TIME_IN_WINDOW$(OUT).DISA PP")
+  field(OUTD, "$(P):TIME_WINDOW$(OUT).VAL PP")
+}
+
+##
+## This is the timer record. It counts up when we are in the 
+## window, and is disabled when we are outside the window.
+##
+record(calcout, "$(P):TIME_IN_WINDOW$(OUT)") {
+  field(CALC, "A+1")
+  field(OUT, "$(P):TIME_IN_WINDOW$(OUT).A")
+  field(SCAN, "1 second")
+}
+
+##
+## Set TIME_WINDOW$(OUT)=1 if IN_WINDOW$(OUT)=1
+## *and* timer has expired.
+##
+record(calcout, "$(P):CALC_TIME_IN_WINDOW$(OUT)") {
+  field(PINI, "YES")
+  field(INPA, "$(TIME=0)")
+  field(INPB, "$(P):TIME_IN_WINDOW$(OUT).VAL CP")
+  field(INPC, "$(P):IN_WINDOW$(OUT).VAL CP")
+  field(CALC, "((C=1)&&(B>=A))?1:0")
+  field(OOPT, "Every Time")
+  field(OUT, "$(P):TIME_WINDOW$(OUT).VAL PP")
+  field(DOPT, "Use CALC")
+  field(FLNK, "$(P):CALC_BUSY_DONE$(OUT).PROC")
+  info(autosaveFields, "A")
+}
+record(bo, "$(P):TIME_WINDOW$(OUT)") {
+  field(DESC, "In Time Window")
+  field(VAL, "0")
+  field(OMSL, "supervisory")
+  field(ZNAM, "Not In Window")
+  field(ONAM, "In Window")
+}
+
+##
+## Disable timer when we leave window
+##
+record(calcout, "$(P):STOP_TIMER$(OUT)") {
+  field(INPA, "$(P):IN_WINDOW$(OUT).VAL CP")
+  field(CALC, "(A=0)")  
+  field(OOPT, "Transition To Non-zero")
+  field(OUT, "$(P):STOP_TIMER$(OUT)_DFANOUT.PROC PP")
+}
+record(dfanout, "$(P):STOP_TIMER$(OUT)_DFANOUT") {
+  field(VAL, "0")
+  field(OUTA, "$(P):TIME_IN_WINDOW$(OUT).VAL PP")
+  field(OUTB, "$(P):TIME_IN_WINDOW$(OUT).A PP")
+  field(FLNK, "$(P):STOP_TIMER$(OUT)_DFANOUT2.PROC")
+}
+record(dfanout, "$(P):STOP_TIMER$(OUT)_DFANOUT2") {
+  field(VAL, "1")
+  field(OUTC, "$(P):TIME_IN_WINDOW$(OUT).DISA PP")
+}
+
+##
+## Set busy record 'done' when TIME_WINDOW$(OUT)=1
+##
+record(calcout, "$(P):CALC_BUSY_DONE$(OUT)") {
+  field(INPA, "$(P):TIME_WINDOW$(OUT).VAL CP")
+  field(CALC, "(A=1)?0:1")
+  field(OOPT, "Every Time")
+  field(OUT, "$(P):SETP_S$(OUT)_BUSY.VAL PP")
+}
+
+###############################################################################
+
+##
+## Dummy record to use for input link name default
+##
+record(ai, "$(P):DUMMY$(OUT)") {
+}
+
+##
+## Monitor $(P):OMI$(OUT) to determin which input sensor to use
+## to deal with the callback. The below set of records automatically
+## switch the input when the 'control input' is changed. They make
+## use of the input sensor PV names passed into this template.
+##
+record(calcout, "$(P):SET_$(OUT)_INPUTA") {
+  field(CALC, "A=1")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTA_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTA_LINK") {
+  field(VAL, "$(INPUTA=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTB") {
+  field(CALC, "A=2")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTB_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTB_LINK") {
+  field(VAL, "$(INPUTB=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTC") {
+  field(CALC, "A=3")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTC_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTC_LINK") {
+  field(VAL, "$(INPUTC=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTD") {
+  field(CALC, "A=4")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTD_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTD_LINK") {
+  field(VAL, "$(INPUTD=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTD2") {
+  field(CALC, "A=5")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTD2_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTD2_LINK") {
+  field(VAL, "$(INPUTD2=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTD3") {
+  field(CALC, "A=6")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTD3_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTD3_LINK") {
+  field(VAL, "$(INPUTD3=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTD4") {
+  field(CALC, "A=7")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTD4_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTD4_LINK") {
+  field(VAL, "$(INPUTD4=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+record(calcout, "$(P):SET_$(OUT)_INPUTD5") {
+  field(CALC, "A=8")
+  field(INPA, "$(P):OMI$(OUT).VAL CP")
+  field(DOPT, "Use OCAL")
+  field(OVAL, "1")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P):SET_$(OUT)_INPUTD5_LINK.PROC")
+}
+record(stringout, "$(P):SET_$(OUT)_INPUTD5_LINK") {
+  field(VAL, "$(INPUTD5=$(P):DUMMY$(OUT)).VAL CP")
+  field(OUT, "$(P):CALC_IN_WINDOW$(OUT).INPB CA")
+}
+
+
 
 ## 
 ## Set the range parameter.

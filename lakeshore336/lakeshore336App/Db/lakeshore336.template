@@ -11,7 +11,10 @@
 #   ADEL (optional) - Archive deadband for temperatures
 #   MDEL (optional) - Monitor deadband for temperatures
 #
-# Notes: The loop dependant PVs are in a seperate template file, included in this one.
+# Notes: The loop/output dependant PVs are in a seperate template file, included in this one.
+#        Generally, set records forward process the associated read records in order
+#        to update the read record faster than their SCAN rate otherwise would do (but they
+#        are not processed in the same processing chain).
 #
 # Matt Pearson, June 2013
 #
@@ -149,6 +152,16 @@ include "lakeshore_option_3062.template"
 # Now include the loop dependant records, for outputs 1, 2, 3 and 4.
 # The common records are in lakeshore336output.template.
 ################################################################
+
+substitute "INPUTA=$(P):KRDG0"
+substitute "INPUTB=$(P):KRDG1"
+substitute "INPUTC=$(P):KRDG2"
+substitute "INPUTD=$(P):KRDG3"
+substitute "INPUTD2=$(P):KRDGD2"
+substitute "INPUTD3=$(P):KRDGD3"
+substitute "INPUTD4=$(P):KRDGD4"
+substitute "INPUTD5=$(P):KRDGD5"
+#substitute "TOLERANCE=1"
 
 substitute "OUT=1"
 include "lakeshore336output.template"
