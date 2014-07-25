@@ -24,6 +24,7 @@ The module provides support for:
 * Support for 4 PID loop outputs, including 2 analog outputs
 * Support for setting ZONE parameters for all 4 output channels
 * Channel access put_callback support when setting parameters
+* Channel access put_callback support for setting the temperature (busy record, using a window and timer).
 * Support for setting and reading input sensor descriptions
 * Set of CS-Studio BOY screens
 
@@ -35,6 +36,11 @@ Original release.
 1-1: 
 Add support for setting and reading input sensor descriptions (and related GUI OPI changes). 
 Factor out common records for input sensors into new template file (lakeshore_input.template). 
+
+1-2:
+Add support for put_callback on the temperature setpoint. A temperature window is used, and a timer. The temperature must be within the window, and the timer must have expired, before the callback is done. The database automatically detects if the input changes for a particular channel.
+Also add associated GUI support to the OPI files.
+
 
 ### Building lakeshore
 
