@@ -9,7 +9,7 @@
   <scripts />
   <show_ruler>true</show_ruler>
   <height>850</height>
-  <name>Lakeshore - Output $(OUT)</name>
+  <name>$(BL) Lakeshore Zone Output $(OUT)</name>
   <snap_to_geometry>true</snap_to_geometry>
   <show_grid>true</show_grid>
   <background_color>

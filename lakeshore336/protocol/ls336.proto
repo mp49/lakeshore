@@ -5,7 +5,7 @@
 # Protocol file for Lakeshore 336
 # Diamond Light Source, June 2010
 #
-# Oak Ridge National Lab, UT-Battelle, 2013-2014.
+# Oak Ridge National Lab, UT-Battelle, 2013-2015.
 # Add more commands.
 # 
 ##################################################
@@ -172,6 +172,47 @@ getZONE {
 getINNAME {
    out "INNAME? \$1";
    in "%#s";
+}
+
+
+
+# /// Read the alarm status
+# /// The first param is the input number, the second is the alarm low record.
+getALARMST {
+   out "ALARMST? \$1";
+   in "%d,%(\$2)d"
+}
+
+# /// Read the alarm params. I put the ends of the PV names here
+# /// to make the initial record INP link short.
+getALARM {
+   out "ALARM? \$1";
+   in "%(\$2_ONOFF)d,%(\$2_HIGHVAL)f,%(\$2_LOWVAL)f,%(\$2_DB)f,%(\$2_LE)d,%(\$2_AU)d,%(\$2_VIS)d"
+}
+
+# /// Read the input reading status
+getRDGST {
+   out "RDGST? \$1";
+   in "%d"
+}
+
+# /// Read the heater status for outputs 1 or 2
+getHTRST {
+   out "HTRST? \$1";
+   in "%d"
+}
+
+# /// Read the input curve number
+getINCRV {
+   out "INCRV? \$1";
+   in "%d"
+}
+
+# /// Read the input type params. I put the ends of the PV names here
+# /// to make the initial record INP link short.
+getINTYPE {
+   out "INTYPE? \$1";
+   in "%(\$2_S)d,%(\$2_AR)d,%(\$2_R)d,%(\$2_C)d,%(\$2_U)d"
 }
 
 

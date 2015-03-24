@@ -203,22 +203,29 @@ record(ao, "$(P):SETP_S$(OUT)") {
   field(PREC, "3")
   field(FLNK, "$(P):SETP_S$(OUT)_BUSYSET.PROC")
   field(EGU, "K")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ###############################################################################
 
 ##
 ## A few records to support put_callback on the setpoint. We use the busy record.
-## A temperature window is used, and a timer. The temperature must be within
-## the window, and the timer must have expired, before the callback is done.
+## A temperature window is used. The temperature must be within
+## the window, before the callback is done.
 ##
 
 record(dfanout, "$(P):SETP_S$(OUT)_BUSYSET")
 {
+   field(VAL, "0")
+   field(OUTA, "$(P):IN_WINDOW$(OUT).VAL PP")
+   field(FLNK, "$(P):SETP_S$(OUT)_BUSYSET2")
+}
+record(dfanout, "$(P):SETP_S$(OUT)_BUSYSET2")
+{
    field(VAL, "1")
-   field(OUTA, "$(P):SETP_S$(OUT)_BUSY PP")
-   field(OUTB, "$(P):SETP$(OUT).PROC CA")
-   field(FLNK, "$(P):CALC_IN_WINDOW$(OUT).PROC")
+   field(OUTA, "$(P):SETP$(OUT).PROC PP")
+   field(OUTB, "$(P):SETP_S$(OUT)_BUSY PP")
+   field(FLNK, "$(P):CALC_IN_WINDOW$(OUT)")
 }
 record(busy, "$(P):SETP_S$(OUT)_BUSY")
 {
@@ -226,14 +233,16 @@ record(busy, "$(P):SETP_S$(OUT)_BUSY")
 record(calcout, "$(P):CALC_IN_WINDOW$(OUT)") {
   field(PINI, "YES")
   field(INPA, "$(TOLERANCE=1)")
-  field(INPB, "$(P):DUMMY$(OUT).VAL CP")
-  field(INPC, "$(P):SETP$(OUT).VAL CP")
+  field(INPB, "$(P):DUMMY$(OUT).VAL")
+  field(INPC, "$(P):SETP_S$(OUT).VAL")
   field(CALC, "((B>=(C-A))&&(B<=(C+A)))?1:0")
   field(OOPT, "Every Time")
   field(OUT, "$(P):IN_WINDOW$(OUT).VAL PP")
   field(DOPT, "Use CALC")
-  field(FLNK, "$(P):CALC_TIME_IN_WINDOW$(OUT).PROC")
+  field(SCAN, "1 second")
+  field(PREC, "1")
   info(autosaveFields, "A")
+  info(archive, "Monitor, 00:00:01, A B C VAL")   
 }
 record(bo, "$(P):IN_WINDOW$(OUT)") {
   field(DESC, "Temperature In Window")
@@ -242,85 +251,14 @@ record(bo, "$(P):IN_WINDOW$(OUT)") {
   field(OMSL, "supervisory")
   field(ZNAM, "Not In Window")
   field(ONAM, "In Window")
-  field(FLNK, "$(P):START_TIMER$(OUT).PROC")
-}
-
-##
-## Enable timer when we transition to IN_WINDOW$(OUT)=1
-##
-record(calcout, "$(P):START_TIMER$(OUT)") {
-  field(INPA, "$(P):IN_WINDOW$(OUT).VAL NPP")
-  field(CALC, "(A=1)")  
-  field(OOPT, "Transition To Non-zero")
-  field(OUT, "$(P):START_TIMER$(OUT)_DFANOUT.PROC PP")
-}
-record(dfanout, "$(P):START_TIMER$(OUT)_DFANOUT") {
-  field(VAL, "0")
-  field(OUTA, "$(P):TIME_IN_WINDOW$(OUT).VAL PP")
-  field(OUTB, "$(P):TIME_IN_WINDOW$(OUT).A PP")
-  field(OUTC, "$(P):TIME_IN_WINDOW$(OUT).DISA PP")
-  field(OUTD, "$(P):TIME_WINDOW$(OUT).VAL PP")
-}
-
-##
-## This is the timer record. It counts up when we are in the 
-## window, and is disabled when we are outside the window.
-##
-record(calcout, "$(P):TIME_IN_WINDOW$(OUT)") {
-  field(CALC, "A+1")
-  field(OUT, "$(P):TIME_IN_WINDOW$(OUT).A")
-  field(SCAN, "1 second")
-}
-
-##
-## Set TIME_WINDOW$(OUT)=1 if IN_WINDOW$(OUT)=1
-## *and* timer has expired.
-##
-record(calcout, "$(P):CALC_TIME_IN_WINDOW$(OUT)") {
-  field(PINI, "YES")
-  field(INPA, "$(TIME=0)")
-  field(INPB, "$(P):TIME_IN_WINDOW$(OUT).VAL CP")
-  field(INPC, "$(P):IN_WINDOW$(OUT).VAL CP")
-  field(CALC, "((C=1)&&(B>=A))?1:0")
-  field(OOPT, "Every Time")
-  field(OUT, "$(P):TIME_WINDOW$(OUT).VAL PP")
-  field(DOPT, "Use CALC")
-  field(FLNK, "$(P):CALC_BUSY_DONE$(OUT).PROC")
-  info(autosaveFields, "A")
-}
-record(bo, "$(P):TIME_WINDOW$(OUT)") {
-  field(DESC, "In Time Window")
-  field(VAL, "0")
-  field(OMSL, "supervisory")
-  field(ZNAM, "Not In Window")
-  field(ONAM, "In Window")
-}
-
-##
-## Disable timer when we leave window
-##
-record(calcout, "$(P):STOP_TIMER$(OUT)") {
-  field(INPA, "$(P):IN_WINDOW$(OUT).VAL CP")
-  field(CALC, "(A=0)")  
-  field(OOPT, "Transition To Non-zero")
-  field(OUT, "$(P):STOP_TIMER$(OUT)_DFANOUT.PROC PP")
-}
-record(dfanout, "$(P):STOP_TIMER$(OUT)_DFANOUT") {
-  field(VAL, "0")
-  field(OUTA, "$(P):TIME_IN_WINDOW$(OUT).VAL PP")
-  field(OUTB, "$(P):TIME_IN_WINDOW$(OUT).A PP")
-  field(FLNK, "$(P):STOP_TIMER$(OUT)_DFANOUT2.PROC")
-}
-record(dfanout, "$(P):STOP_TIMER$(OUT)_DFANOUT2") {
-  field(VAL, "1")
-  field(OUTC, "$(P):TIME_IN_WINDOW$(OUT).DISA PP")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
 ## Set busy record 'done' when TIME_WINDOW$(OUT)=1
 ##
 record(calcout, "$(P):CALC_BUSY_DONE$(OUT)") {
-  field(INPA, "$(P):TIME_WINDOW$(OUT).VAL CP")
+  field(INPA, "$(P):IN_WINDOW$(OUT).VAL CP")
   field(CALC, "(A=1)?0:1")
   field(OOPT, "Every Time")
   field(OUT, "$(P):SETP_S$(OUT)_BUSY.VAL PP")

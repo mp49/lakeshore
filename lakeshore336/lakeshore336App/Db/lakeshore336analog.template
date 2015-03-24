@@ -11,6 +11,7 @@ record(ai, "$(P):AOUT$(OUT)") {
   field(SCAN, "$(SCAN) second")
   field(PREC, "1")
   field(EGU, "%")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
