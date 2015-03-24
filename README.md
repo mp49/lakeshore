@@ -20,12 +20,15 @@ The module provides support for:
 * Reading temperature and raw inputs
 * Support for reading 3062 option card inputs
 * Setting up channel output parameters such as setpoint and ramp rate
-* Reading back channel output parameters
+* Reading channel output parameters
 * Support for 4 PID loop outputs, including 2 analog outputs
 * Support for setting ZONE parameters for all 4 output channels
 * Channel access put_callback support when setting parameters
-* Channel access put_callback support for setting the temperature (busy record, using a window and timer).
+* Channel access put_callback support for setting the temperature (using a busy record and a tolerance window).
 * Support for setting and reading input sensor descriptions
+* Support for reading sensor and heater status and alarm conditions
+* High level logic to provide a lakeshore summary alarm, and control of which sensor is used for the summary alarm.
+* Logic that provides a master/slave relationship between two outputs, with a setpoint dependent offset table.
 * Set of CS-Studio BOY screens
 
 ### Release history
@@ -40,6 +43,17 @@ Factor out common records for input sensors into new template file (lakeshore_in
 1-2:
 Add support for put_callback on the temperature setpoint. A temperature window is used, and a timer. The temperature must be within the window, and the timer must have expired, before the callback is done. The database automatically detects if the input changes for a particular channel.
 Also add associated GUI support to the OPI files.
+
+1-3:
+* Removed timer logic for callback. It was complicated and there may be a race condition. Now the callback just uses the tolerance window.
+* Use SETP_S and not SETP for the tolerance check.
+* Archive a lot of additional parameters.
+* Add lakeshore_link_output.template to use when linking together two outputs in a master/slave relationship, with a temperature dependent offset table.
+* Read sensor status, type, curve setting and alarm conditions.
+* Read heater status for output 1 and 2. Cache the value and use in high level alarm logic.
+* Provide an alarm summary record for the input parameters (software limits, alarm status and input sensor status).
+* Add records to control polling for each input, for the input specific data. This allows easy disable of a channel.
+* Add OPI support for all the above.
 
 
 ### Building lakeshore
@@ -68,6 +82,15 @@ where the macros are:
    TEMPSCAN - Scan frequency for the temperatures and raw inputs (eg. 1 second)
    SCAN - Scan frequency for the auxiliary parameters such as output ramp rate (eg. 5 seconds)
 ```
+To use the master/slave relationship:
+```
+   file lakeshore_link_output.template
+   {
+      pattern {P, MASTER, SLAVE}
+	      {BL9:SE:LS, 2, 1}
+   }
+```
+
 There are no libraries to link to apart from the usual Asyn and StreamDevice libraries. 
 
 There is an example IOC provided with the module.
