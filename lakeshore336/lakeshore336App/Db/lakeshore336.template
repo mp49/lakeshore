@@ -236,6 +236,63 @@ substitute "OUT=4"
 include "lakeshore336zone_analog.template"
 
 ################################################################
+# Common setpoint record to set all the outputs
+
+##
+## Set all the outputs at the same time
+##
+record(dfanout, "$(P):SETP_S") {
+  field(DESC, "Set all the outputs")
+  field(OMSL, "supervisory")
+  field(OUTA, "$(P):SETP_S1 PP")
+  field(OUTB, "$(P):SETP_S2 PP")
+  field(OUTC, "$(P):SETP_S3 PP")
+  field(OUTD, "$(P):SETP_S4 PP")
+  info(archive, "Monitor, 00:00:01, VAL")
+}
+
+##
+## Set all the tolerances at the same time
+##
+record(dfanout, "$(P):TOLERANCE") {
+  field(DESC, "Set all the tolerances")
+  field(OMSL, "supervisory")
+  field(OUTA, "$(P):CALC_IN_WINDOW1.A PP")
+  field(OUTB, "$(P):CALC_IN_WINDOW2.A PP")
+  field(OUTC, "$(P):CALC_IN_WINDOW3.A PP")
+  field(OUTD, "$(P):CALC_IN_WINDOW4.A PP")
+  field(EGU, "K")
+  field(PREC, "1")
+  info(autosaveFields, "VAL")
+  info(archive, "Monitor, 00:00:01, VAL")
+}
+
+##
+## For user feedback, calculate when all temperature 
+## inputs are in tolerance windows
+##
+record(calcout, "$(P):CALC_IN_WINDOWS") {
+  field(PINI, "YES")
+  field(INPA, "$(P):IN_WINDOW1 CP MS")
+  field(INPB, "$(P):IN_WINDOW2 CP MS")
+  field(INPC, "$(P):IN_WINDOW3 CP MS")
+  field(INPD, "$(P):IN_WINDOW4 CP MS")
+  field(CALC, "A&&B&&C&&D?1:0")
+  field(OOPT, "Every Time")
+  field(DOPT, "Use CALC")
+  field(OUT, "$(P):IN_WINDOWS PP")
+}
+record(bo, "$(P):IN_WINDOWS") {
+  field(DESC, "Temperatures In Windows")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(OMSL, "supervisory")
+  field(ZNAM, "Not In Windows")
+  field(ONAM, "In Windows")
+  info(archive, "Monitor, 00:00:01, VAL")   
+}
+
+################################################################
 # Records dealing with alarm handling
 
 ##
@@ -309,6 +366,14 @@ record(bi, "$(P):ALARM_SUMMARY") {
   field(VAL, "0")
   info(archive, "Monitor, 00:00:01, VAL")     
 }
+
+###############################################################
+# Add records for dealing with mapping a sensor PV name to a 
+# user friendly sample temp PV name
+
+include "lakeshore_name_mapping.template"
+
+###############################################################
 
 ##
 ## Generic Asyn record for reading parameters.
