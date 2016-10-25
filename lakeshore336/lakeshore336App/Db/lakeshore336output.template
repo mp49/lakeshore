@@ -116,6 +116,7 @@ record(ai, "$(P):P$(OUT)") {
   field(SDIS, "$(P):DISABLE_POLL")
   field(INP, "@ls336.proto getPID($(OUT),$(P):I$(OUT),$(P):D$(OUT)) $(PORT) $(ADDR)")
   field(SCAN, "$(SCAN) second")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -124,6 +125,7 @@ record(ai, "$(P):P$(OUT)") {
 record(ai, "$(P):I$(OUT)") {
   field(DTYP, "Soft Channel")
   field(SCAN, "Passive")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -132,6 +134,7 @@ record(ai, "$(P):I$(OUT)") {
 record(ai, "$(P):D$(OUT)") {
   field(DTYP, "Soft Channel")
   field(SCAN, "Passive")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
