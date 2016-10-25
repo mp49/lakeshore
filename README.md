@@ -55,6 +55,11 @@ Also add associated GUI support to the OPI files.
 * Add records to control polling for each input, for the input specific data. This allows easy disable of a channel.
 * Add OPI support for all the above.
 
+1-4:
+* Add support for setting all the outputs at once, and all the tolerance windows at once.
+* Add support for mapping any of the sensor records to a high level user friendly 'sample temperature' PV name.
+* Add OPI support for the above.
+
 
 ### Building lakeshore
 
