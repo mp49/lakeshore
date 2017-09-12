@@ -1,0 +1,67 @@
+##################################################
+#
+# Protocol File
+#
+# Protocol file for Analog Output handling
+# for Lakeshore 336.
+#
+# Oak Ridge National Lab, UT-Battelle,
+#
+#
+##################################################
+
+##################################################
+# General Settings
+##################################################
+
+Terminator = "\r\n";
+ReplyTimeout = 1000;
+
+###################################################
+# Read function
+###################################################
+
+# /// Read Analog Output Parameters
+#
+# From LS Manual:
+# ANALOG? Monitor Out Parameter Query
+# Input ANALOG? <output>[term]
+#   Format n <output> Specifies which unpowered analog output to query the Monitor Out parameters for: 3 or 4.
+# Returned <input>,<units>,<high value>,<low value>,<polarity>[term]
+#   Format n,n,±nnnnn,±nnnnn,n (refer to command for definition)
+#
+getANA {
+   out "ANALOG? \$1";
+   in "%(\$2_INP)d,%(\$2_UN)d,%(\$2_HI)f,%(\$2_LO)f,%(\$2_POL)d"
+}
+
+
+#######################################################
+# Write function
+#######################################################
+
+# /// Write Analog Output Parameters
+#
+# From LS Manual:
+# ANALOG Monitor Out Parameter Command
+# Input ANALOG <output>,<input>,<units>, <high value>,<low value>,<polarity>[term]
+#   Format n,n,n,±nnnnn,±nnnnn,n
+#   <output> Unpowered analog output to configure: 3 or  4
+#   <input> Specifies which input to monitor. 0 = none, 1 = Input A, 2 =Input B, 3 = Input C, 4 = Input D (5 = Input D2, 6 = Input D3, 7 = Input D4, 8 = Input D5 for 3062 option)
+#   <units> Specifies the units on which to base the output voltage: 1 = kelvin, 2 = Celsius, 3 = sensor units
+#   <high value> If output mode is Monitor Out, this parameter represents the data at which the Monitor Out reaches +100% output.
+#     Entered in the units designated by the <units> parmeter. Refer to OUTMODE command.
+#   <low value> If output mode is Monitor Out, this parameter represents the data at which the analog output reaches -100% output if bipolar, or 0% output if positive only.
+#     Entered in the units designated by the <units> parmeter.
+#   <polarity>Specifies output voltage is 0 = unipolar (positive output only) or 1 = bipolar (positive or negative output)
+# Example ANALOG 4,1,1,100.0,0.0,0[term]
+#   —sets output 4 to monitor Input A kelvin reading with 100.0 K at +100% output (+10.0 V) and 0.0 K at 0% output (0.0 V).
+# Remarks
+#   Use the OUTMODE command to set the output mode to Monitor Out.
+#   The <input> parameter in the ANALOG command is the same as the <input> parameter in the OUT-MODE command.
+#   It is included in the ANALOG command for backward compatibility with previous Lake Shore temperature monitors and controllers.
+#   The ANALOG command name is also named as such for backward compatibility.
+#
+setANA {
+  out "ANALOG \$1,%(\$2_INP.RVAL)d,%(\$2_UN.RVAL)d,%(\$2_HI)f,%(\$2_LO)f,%(\$2_POL.RVAL)d";
+}

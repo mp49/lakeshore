@@ -1,0 +1,162 @@
+################################################################
+#
+# Template Supplement File for
+# Analog Output handling for
+# Lakeshore 336/350 Temperature Controller .
+#
+# Macros:
+
+#   OUT - Output number to user (3 or 4)
+#   P - Prefix for PV name
+#   PORT - Bus/Port Address (eg. ASYN Port).
+#   ADDR - Address on the bus (optional)
+#
+#
+################################################################
+
+##  Analog Ouput Parameters Read Command
+##
+record(bi, "$(P):AN_OUTR$(OUT)") {
+  field(DESC, "Read Analog Output Params")
+  field(DTYP, "stream")
+  field(SDIS, "$(P):DISABLE_POLL")
+  field(INP, "@ls336_analog.proto getANA($(OUT),$(P):AN_OUTR$(OUT)) $(PORT) $(ADDR)")
+  field(SCAN, "$(SCAN) second")
+}
+
+##  Analog Ouput Parameter Read: Input
+##
+record(mbbi, "$(P):AN_OUTR$(OUT)_INP") {
+  field(DESC, "Anlg Out Read Parm:Input")
+  field(ZRST, "none")
+  field(ZRVL, "0")
+  field(ONST, "A")
+  field(ONVL, "1")
+  field(TWST, "B")
+  field(TWVL, "2")
+  field(THST, "C")
+  field(THVL, "3")
+  field(FRST, "D")
+  field(FRVL, "4")
+  field(FVST, "D2")
+  field(FVVL, "5")
+  field(SXST, "D3")
+  field(SXVL, "6")
+  field(SVST, "D4")
+  field(SVVL, "7")
+  field(EIST, "D5")
+  field(EIVL, "8")
+}
+
+##  Analog Ouput Parameter Read: Units
+##
+record(mbbi, "$(P):AN_OUTR$(OUT)_UN") {
+  field(DESC, "Anlg Out Read Parm:Units")
+  field(ZRST, "None")
+  field(ZRVL, "0")
+  field(ONST, "Kelvin")
+  field(ONVL, "1")
+  field(TWST, "Celsius")
+  field(TWVL, "2")
+  field(THST, "Sensor")
+  field(THVL, "3")
+}
+
+##  Analog Ouput Parameter Read: High Value
+##
+record(ai, "$(P):AN_OUTR$(OUT)_HI") {
+  field(DESC, "Anlg Out Read Parm:High Val")
+}
+
+##  Analog Ouput Parameter Read: Low Value
+##
+record(ai, "$(P):AN_OUTR$(OUT)_LO") {
+  field(DESC, "Anlg Out Read Parm:Low Val")
+}
+
+##  Analog Ouput Parameter Read: Polarity
+##
+record(bi, "$(P):AN_OUTR$(OUT)_POL") {
+  field(DESC, "Anlg Out Read Parm:Polarity")
+  field(ZNAM, "Unipolar")
+  field(ONAM, "Bipolar")
+}
+
+##  Analog Ouput Parameters Write Command
+##
+record(bo, "$(P):AN_OUTW$(OUT)") {
+  field(DESC, "Write Analog Params")
+  field(DTYP, "stream")
+  field(OUT, "@ls336_analog.proto setANA($(OUT),$(P):AN_OUTW$(OUT)) $(PORT) $(ADDR)")
+  field(SCAN, "Passive")
+  field(FLNK, "$(P):AN_OUTR$(OUT).PROC CA")
+}
+
+##  Analog Ouput Parameter Write: Input
+##
+record(mbbo, "$(P):AN_OUTW$(OUT)_INP") {
+  field(DESC, "Anlg Out Write Parm:Input")
+  field(ZRST, "None")
+  field(ZRVL, "0")
+  field(ONST, "Input A")
+  field(ONVL, "1")
+  field(TWST, "Input B")
+  field(TWVL, "2")
+  field(THST, "Input C")
+  field(THVL, "3")
+  field(FRST, "Input D")
+  field(FRVL, "4")
+  field(FVST, "Input D2")
+  field(FVVL, "5")
+  field(SXST, "Input D3")
+  field(SXVL, "6")
+  field(SVST, "Input D4")
+  field(SVVL, "7")
+  field(EIST, "Input D5")
+  field(EIVL, "8")
+  field(DTYP, "Soft Channel")
+  field(SCAN, "Passive")
+}
+
+
+##  Analog Ouput Parameter Write: Units
+##
+record(mbbo, "$(P):AN_OUTW$(OUT)_UN") {
+  field(DESC, "Anlg Out Write Parm:Units")
+  field(ZRST, "None")
+  field(ZRVL, "0")
+  field(ONST, "Kelvin")
+  field(ONVL, "1")
+  field(TWST, "Celsius")
+  field(TWVL, "2")
+  field(THST, "Sensor")
+  field(THVL, "3")
+  field(DTYP, "Soft Channel")
+  field(SCAN, "Passive")
+}
+
+##  Analog Ouput Parameter Write: High Value
+##
+record(ao, "$(P):AN_OUTW$(OUT)_HI") {
+  field(DESC, "Anlg Out Write Parm:High Val")
+  field(DTYP, "Soft Channel")
+  field(SCAN, "Passive")
+}
+
+##  Analog Ouput Parameter Write: Low Value
+##
+record(ao, "$(P):AN_OUTW$(OUT)_LO") {
+  field(DESC, "Anlg Out Write Parm:Low Val")
+  field(DTYP, "Soft Channel")
+  field(SCAN, "Passive")
+}
+
+##  Analog Ouput Parameter Write: Polarity
+##
+record(bo, "$(P):AN_OUTW$(OUT)_POL") {
+  field(DESC, "Anlg Out Write Parm:Polarity")
+  field(ZNAM, "Unipolar")
+  field(ONAM, "Bipolar")
+  field(DTYP, "Soft Channel")
+  field(SCAN, "Passive")
+}

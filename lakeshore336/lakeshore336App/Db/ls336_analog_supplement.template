@@ -1,0 +1,21 @@
+################################################################
+#
+# Template Supplement File for
+# Analog Output handling for
+# Lakeshore 336/350 Temperature Controller .
+#
+# Macros:
+
+#   P - Prefix for PV name
+#   PORT - Bus/Port Address (eg. ASYN Port).
+#   ADDR - Address on the bus (optional)
+#
+#
+################################################################
+
+substitute "OUT=3"
+include "ls336_analog_supplement_base.template"
+
+substitute "OUT=4"
+include "ls336_analog_supplement_base.template"
+
