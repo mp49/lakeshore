@@ -54,7 +54,7 @@ record(bo, "$(P):DISABLE_POLL") {
 # Read records
 ################################################################
 
-## 
+##
 ## Read the ID string from the device.
 ##
 record(stringin, "$(P):ID") {
@@ -65,7 +65,7 @@ record(stringin, "$(P):ID") {
   field(PINI, "YES")
 }
 
-## 
+##
 ## Read the model number from the device.
 ##
 record(stringin, "$(P):MODEL") {
@@ -75,7 +75,7 @@ record(stringin, "$(P):MODEL") {
   field(SCAN, "I/O Intr")
 }
 
-## 
+##
 ## Read the serial number from the device.
 ##
 record(stringin, "$(P):SERIAL") {
@@ -85,7 +85,7 @@ record(stringin, "$(P):SERIAL") {
   field(SCAN, "I/O Intr")
 }
 
-## 
+##
 ## Read the firmware from the device.
 ##
 record(stringin, "$(P):FIRMWARE") {
@@ -96,7 +96,7 @@ record(stringin, "$(P):FIRMWARE") {
 }
 
 
-## 
+##
 ## Read the tuning status from the device.
 ##
 #record(stringin, "$(P):TUNEST") {
@@ -106,7 +106,7 @@ record(stringin, "$(P):FIRMWARE") {
 #  field(SCAN, "$(SCAN) second")
 #}
 
-## 
+##
 ## Read the tuning status success parameter
 ##
 #record(bi, "$(P):TUNESTSUCCESS") {
@@ -193,7 +193,7 @@ include "lakeshore_input.template"
 ################################################################
 
 ################################################################
-# Include 3062 option 
+# Include 3062 option
 ################################################################
 
 include "lakeshore_option_3062.template"
@@ -268,7 +268,7 @@ record(dfanout, "$(P):TOLERANCE") {
 }
 
 ##
-## For user feedback, calculate when all temperature 
+## For user feedback, calculate when all temperature
 ## inputs are in tolerance windows
 ##
 record(calcout, "$(P):CALC_IN_WINDOWS") {
@@ -289,7 +289,7 @@ record(bo, "$(P):IN_WINDOWS") {
   field(OMSL, "supervisory")
   field(ZNAM, "Not In Windows")
   field(ONAM, "In Windows")
-  info(archive, "Monitor, 00:00:01, VAL")   
+  info(archive, "Monitor, 00:00:01, VAL")
 }
 
 ################################################################
@@ -308,6 +308,7 @@ record(bo, "$(P):DISABLE_ALARM") {
   field(ZSV, "NO_ALARM")
   field(OSV, "MINOR")
   field(FLNK, "$(P):ALARM_SUMMARY_CALC")
+  field(ASG, "ALWAYS")
   info(autosaveFields, "VAL")
 }
 
@@ -342,7 +343,7 @@ record(calc, "$(P):ALARM_SUMMARY_CALC") {
   field(INPJ, "$(P):HTRST2_CACHE CP MS")
   field(CALC, "A")
   field(FLNK, "$(P):ALARM_SUMMARY_CALC2")
-  field(SDIS, "$(P):DISABLE_ALARM")  
+  field(SDIS, "$(P):DISABLE_ALARM")
 }
 record(calcout, "$(P):ALARM_SUMMARY_CALC2") {
   field(INPA, "$(P):ALARM_SUMMARY_CALC.STAT")
@@ -353,7 +354,7 @@ record(calcout, "$(P):ALARM_SUMMARY_CALC2") {
 }
 
 ##
-## Top level alarm summary record. 
+## Top level alarm summary record.
 ## This summarizes the input alarm summary record
 ## along with the two main output heater status records
 ## which are on loop 1 and 2.
@@ -364,14 +365,219 @@ record(bi, "$(P):ALARM_SUMMARY") {
   field(OSV, "MAJOR")
   field(PINI, "YES")
   field(VAL, "0")
-  info(archive, "Monitor, 00:00:01, VAL")     
+  info(archive, "Monitor, 00:00:01, VAL")
 }
 
 ###############################################################
-# Add records for dealing with mapping a sensor PV name to a 
+# Add records for dealing with mapping a sensor PV name to a
 # user friendly sample temp PV name
 
 include "lakeshore_name_mapping.template"
+
+###############################################################
+
+###############################################################
+# Add records to aid in changing units on the setpoints,
+# sensor readbacks and ramp rates. Is there an easier way in a database?
+
+record(stringout, "$(P):SET_K_EGU") {
+  field(VAL, "K")
+  field(OUT, "$(P):SET_EGU PP")
+  field(FLNK, "$(P):SET_K_EGUPERMIN")
+}
+record(stringout, "$(P):SET_K_EGUPERMIN") {
+  field(VAL, "K/Min")
+  field(OUT, "$(P):SET_EGUPERMIN PP")
+  field(FLNK, "$(P):SET_K_AOFF")
+}
+
+record(stringout, "$(P):SET_C_EGU") {
+  field(VAL, "C")
+  field(OUT, "$(P):SET_EGU PP")
+  field(FLNK, "$(P):SET_C_EGUPERMIN")
+}
+record(stringout, "$(P):SET_C_EGUPERMIN") {
+  field(VAL, "C/Min")
+  field(OUT, "$(P):SET_EGUPERMIN PP")
+  field(FLNK, "$(P):SET_C_AOFF")
+}
+
+record(stringout, "$(P):SET_EGU") {
+  field(VAL, "None")
+}
+record(stringout, "$(P):SET_EGUPERMIN") {
+  field(VAL, "None")
+}
+
+# ///
+# /// Set AOFF on KRDG input readings
+# ///
+record(dfanout, "$(P):SET_C_AOFF") {
+  field(VAL, "-273.15")
+  field(OUTA, "$(P):KRDG0.AOFF PP")
+  field(OUTB, "$(P):KRDG1.AOFF PP")
+  field(OUTC, "$(P):KRDG2.AOFF PP")
+  field(OUTD, "$(P):KRDG3.AOFF PP")
+  field(OUTE, "$(P):KRDGD2.AOFF PP")
+  field(OUTF, "$(P):KRDGD3.AOFF PP")
+  field(OUTG, "$(P):KRDGD4.AOFF PP")
+  field(OUTH, "$(P):KRDGD5.AOFF PP")
+  field(FLNK, "$(P):KRDG0_EGU")
+}
+
+# ///
+# /// Clear AOFF on KRDG input readings
+# ///
+record(dfanout, "$(P):SET_K_AOFF") {
+  field(VAL, "0")
+  field(OUTA, "$(P):KRDG0.AOFF PP")
+  field(OUTB, "$(P):KRDG1.AOFF PP")
+  field(OUTC, "$(P):KRDG2.AOFF PP")
+  field(OUTD, "$(P):KRDG3.AOFF PP")
+  field(OUTE, "$(P):KRDGD2.AOFF PP")
+  field(OUTF, "$(P):KRDGD3.AOFF PP")
+  field(OUTG, "$(P):KRDGD4.AOFF PP")
+  field(OUTH, "$(P):KRDGD5.AOFF PP")
+  field(FLNK, "$(P):KRDG0_EGU")
+}
+
+# ///
+# /// Set Units
+# ///
+record(stringout, "$(P):KRDG0_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDG0.EGU")
+  field(FLNK, "$(P):KRDG1_EGU")
+}
+record(stringout, "$(P):KRDG1_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDG1.EGU")
+  field(FLNK, "$(P):KRDG2_EGU")
+}
+record(stringout, "$(P):KRDG2_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDG2.EGU")
+  field(FLNK, "$(P):KRDG3_EGU")
+}
+record(stringout, "$(P):KRDG3_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDG3.EGU")
+  field(FLNK, "$(P):KRDGD2_EGU")
+}
+record(stringout, "$(P):KRDGD2_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDGD2.EGU")
+  field(FLNK, "$(P):KRDGD3_EGU")
+}
+record(stringout, "$(P):KRDGD3_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDGD3.EGU")
+  field(FLNK, "$(P):KRDGD4_EGU")
+}
+record(stringout, "$(P):KRDGD4_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDGD4.EGU")
+  field(FLNK, "$(P):KRDGD5_EGU")
+}
+record(stringout, "$(P):KRDGD5_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):KRDGD5.EGU")
+  field(FLNK, "$(P):SETP1_EGU")
+}
+record(stringout, "$(P):SETP1_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP1.EGU")
+  field(FLNK, "$(P):SETP2_EGU")
+}
+record(stringout, "$(P):SETP2_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP2.EGU")
+  field(FLNK, "$(P):SETP3_EGU")
+}
+record(stringout, "$(P):SETP3_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP3.EGU")
+  field(FLNK, "$(P):SETP4_EGU")
+}
+record(stringout, "$(P):SETP4_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP4.EGU")
+  field(FLNK, "$(P):RAMP1_EGU")
+}
+record(stringout, "$(P):RAMP1_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGUPERMIN")
+  field(OUT, "$(P):RAMP1.EGU")
+  field(FLNK, "$(P):RAMP2_EGU")
+}
+record(stringout, "$(P):RAMP2_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGUPERMIN")
+  field(OUT, "$(P):RAMP2.EGU")
+  field(FLNK, "$(P):RAMP3_EGU")
+}
+record(stringout, "$(P):RAMP3_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGUPERMIN")
+  field(OUT, "$(P):RAMP3.EGU")
+  field(FLNK, "$(P):RAMP4_EGU")
+}
+record(stringout, "$(P):RAMP4_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGUPERMIN")
+  field(OUT, "$(P):RAMP4.EGU")
+  field(FLNK, "$(P):SETP_S1_EGU")
+}
+record(stringout, "$(P):SETP_S1_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP_S1.EGU")
+  field(FLNK, "$(P):SETP_S2_EGU")
+}
+record(stringout, "$(P):SETP_S2_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP_S2.EGU")
+  field(FLNK, "$(P):SETP_S3_EGU")
+}
+record(stringout, "$(P):SETP_S3_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP_S3.EGU")
+  field(FLNK, "$(P):SETP_S4_EGU")
+}
+record(stringout, "$(P):SETP_S4_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SETP_S4.EGU")
+  field(FLNK, "$(P):SAMPLE_TEMP_EGU")
+}
+record(stringout, "$(P):SAMPLE_TEMP_EGU") {
+  field(OMSL, "closed_loop")
+  field(DOL, "$(P):SET_EGU")
+  field(OUT, "$(P):SAMPLE_TEMP.EGU")
+}
+
+###############################################################
+# Add records for dealing with curve handling and anlog output parameters
+
+#include "ls336_curves_read.template"
+#include "ls336_curves_write.template"
+#include "ls336_curve_input.template"
+
+include "ls336_analog_supplement.template"
 
 ###############################################################
 
