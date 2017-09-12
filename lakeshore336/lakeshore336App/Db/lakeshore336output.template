@@ -43,6 +43,7 @@ record(ai, "$(P):SETP$(OUT)") {
   field(SCAN, "$(TEMPSCAN) second")
   field(PREC, "3")
   field(EGU, "K")
+  info(autosaveFields, "EGU")
   info(archive, "Monitor, 00:00:01, VAL")   
 }
 
@@ -60,6 +61,8 @@ record(ai, "$(P):RAMP$(OUT)") {
   field(SCAN, "$(SCAN) second")
   field(PREC, "3")
   field(EGU, "K/min")  
+  info(autosaveFields, "EGU")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -72,6 +75,7 @@ record(bi, "$(P):RAMPST$(OUT)") {
   field(DTYP, "Soft Channel")
   field(ZNAM, "Off")
   field(ONAM, "On")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -89,6 +93,7 @@ record(mbbi, "$(P):RANGE$(OUT)") {
   field(FVVL, "5")
   field(SCAN, "$(SCAN) second")
   field(INP, "@ls336.proto getRANGE($(OUT)) $(PORT) $(ADDR)")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -96,6 +101,7 @@ record(mbbi, "$(P):RANGE$(OUT)") {
 ## This is output specific and is defined in another file.
 ##
 record(mbbi, "$(P):OMMODE$(OUT)") {
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -106,6 +112,7 @@ record(ai, "$(P):MOUT$(OUT)") {
   field(SDIS, "$(P):DISABLE_POLL")
   field(INP, "@ls336.proto getMOUT($(OUT)) $(PORT) $(ADDR)")
   field(SCAN, "$(SCAN) second")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -153,6 +160,7 @@ record(mbbi, "$(P):OMM$(OUT)") {
   field(FVVL, "5")
   field(SCAN, "$(SCAN) second")
   field(INP, "@ls336.proto getOM($(OUT),$(P):OMI$(OUT),$(P):OMP$(OUT)) $(PORT) $(ADDR)")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -178,6 +186,7 @@ record(mbbi, "$(P):OMI$(OUT)") {
   field(SVVL, "7")
   field(EIST, "Input D5")
   field(EIVL, "8")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -189,6 +198,7 @@ record(mbbi, "$(P):OMP$(OUT)") {
   field(ZRVL, "0")
   field(ONST, "On")
   field(ONVL, "1")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ################################################################
@@ -206,6 +216,7 @@ record(ao, "$(P):SETP_S$(OUT)") {
   field(PREC, "3")
   field(FLNK, "$(P):SETP_S$(OUT)_BUSYSET.PROC")
   field(EGU, "K")
+  info(autosaveFields, "EGU")
   info(archive, "Monitor, 00:00:01, VAL")   
 }
 
@@ -396,6 +407,7 @@ record(mbbo, "$(P):RANGE_S$(OUT)") {
   field(SDIS, "$(P):DISABLE")
   field(OUT, "@ls336.proto setRANGE($(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):RANGE$(OUT).PROC CA") 
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -416,7 +428,7 @@ record(ao, "$(P):RAMP_S$(OUT)") {
   field(OUT, "@ls336.proto setRAMP($(P):RAMPST$(OUT),$(OUT)) $(PORT) $(ADDR)")
   field(PREC, "3")
   field(FLNK, "$(P):RAMP$(OUT).PROC CA")
-  field(EGU, "K/min")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -438,6 +450,7 @@ record(bo, "$(P):RAMPST_S$(OUT)") {
   field(FLNK, "$(P):RAMP$(OUT).PROC CA")
   field(ZNAM, "Off")
   field(ONAM, "On")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ## 
@@ -448,6 +461,7 @@ record(ao, "$(P):MOUT_S$(OUT)") {
   field(SDIS, "$(P):DISABLE")
   field(OUT, "@ls336.proto setMOUT($(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):MOUT$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -458,6 +472,7 @@ record(ao, "$(P):P_S$(OUT)") {
   field(SDIS, "$(P):DISABLE")
   field(OUT, "@ls336.proto setP($(OUT),$(P):I$(OUT),$(P):D$(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):P$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -468,6 +483,7 @@ record(ao, "$(P):I_S$(OUT)") {
   field(SDIS, "$(P):DISABLE")
   field(OUT, "@ls336.proto setI($(P):P$(OUT),$(OUT),$(P):D$(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):P$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -478,6 +494,7 @@ record(ao, "$(P):D_S$(OUT)") {
   field(SDIS, "$(P):DISABLE")
   field(OUT, "@ls336.proto setD($(P):P$(OUT),$(P):I$(OUT),$(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):P$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -495,6 +512,7 @@ record(mbbo, "$(P):OMM_S$(OUT)") {
   field(FVVL, "5")
   field(OUT, "@ls336.proto setOM($(OUT),$(P):OMI$(OUT),$(P):OMP$(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):OMM$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -523,6 +541,7 @@ record(mbbo, "$(P):OMI_S$(OUT)") {
   field(EIVL, "8")
   field(OUT, "@ls336.proto setOMI($(OUT),$(P):OMM$(OUT),$(P):OMP$(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):OMM$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
@@ -537,6 +556,7 @@ record(mbbo, "$(P):OMP_S$(OUT)") {
   field(ONVL, "1")
   field(OUT, "@ls336.proto setOMP($(OUT),$(P):OMM$(OUT),$(P):OMI$(OUT)) $(PORT) $(ADDR)")
   field(FLNK, "$(P):OMM$(OUT).PROC CA")
+  info(archive, "Monitor, 00:00:01, VAL")   
 }
 
 ##
