@@ -73,7 +73,6 @@ record(ao, "$(P):MS:SETP_S") {
   field(DESC, "Master/Slave Setpoint")
   field(PREC, "3")
   field(FLNK, "$(P):WRITE_TO_OFFSETS")
-  field(EGU, "K")
   info(archive, "Monitor, 00:00:01, VAL")   
 }
 
