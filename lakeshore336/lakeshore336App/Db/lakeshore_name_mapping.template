@@ -13,12 +13,12 @@ record(ai, "$(P):SAMPLE_TEMP") {
   field(HSV, "MINOR")
   field(LSV, "MINOR")
   field(LLSV,"MAJOR")
-  field(HYST,"1.0")
+  field(HYST,"0.0")
   field(HIHI,"1000")
   field(HIGH,"1000")
   field(LOW,"-1")
   field(LOLO,"-1")
-  info(autosaveFields, "INP PREC HIHI HIGH LOW LOLO")
+  info(autosaveFields, "INP PREC HIHI HIGH LOW LOLO EGU")
   info(archive, "Monitor, 00:00:01, VAL")
 }
 
