@@ -60,6 +60,11 @@ Also add associated GUI support to the OPI files.
 * Add support for mapping any of the sensor records to a high level user friendly 'sample temperature' PV name.
 * Add OPI support for the above.
 
+1-5:
+* Support changing units to and from Celsius and Kelvin.
+* Add support for ANALOG settings on outputs 3 and 4.
+* Remove hysterisis setting on alarms.
+* Add OPI support for the above.
 
 ### Building lakeshore
 
