@@ -74,14 +74,14 @@ record(ai, "$(P):KRDG$(INDEX)") {
   field(HSV, "MINOR")
   field(LSV, "MINOR")
   field(LLSV,"MAJOR")
-  field(HYST,"1.0")
+  field(HYST,"0.0")
   field(HIHI,"1000")
   field(HIGH,"1000")
   field(LOW,"-1")
   field(LOLO,"-1")
   field(ADEL, "$(ADEL=1)")
   field(MDEL, "$(MDEL=0)")
-  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL")
+  info(autosaveFields, "HIHI HIGH LOW LOLO ADEL MDEL EGU AOFF")
   info(archive, "Monitor, 00:00:01, VAL")   
 }
 
@@ -170,15 +170,12 @@ record(bi, "$(P):ALARM$(INDEX)_ONOFF") {
 }
 record(ai, "$(P):ALARM$(INDEX)_HIGHVAL") {
   field(DESC, "Alarm High Value")
-  field(EGU, "K")
 }
 record(ai, "$(P):ALARM$(INDEX)_LOWVAL") {
   field(DESC, "Alarm Low Value")
-  field(EGU, "K")
 }
 record(ai, "$(P):ALARM$(INDEX)_DB") {
   field(DESC, "Alarm Deadband")
-  field(EGU, "K")
 }
 record(bi, "$(P):ALARM$(INDEX)_LE") {
   field(DESC, "Alarm Latch Enable")
