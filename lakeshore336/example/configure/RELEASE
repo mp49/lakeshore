@@ -27,7 +27,6 @@ SUPPORT=$(EPICS)/support
 ASYN=		$(SUPPORT)/asyn
 STREAMDEVICE=	$(SUPPORT)/StreamDevice
 LAKESHORE336=	$(SUPPORT)/lakeshore/lakeshore336
-DEVIOCSTATS=    $(SUPPORT)/devIocStats
 AUTOSAVE=       $(SUPPORT)/autosave
 
 EPICS_BASE=$(EPICS)/base
