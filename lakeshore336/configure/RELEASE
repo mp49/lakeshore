@@ -13,13 +13,12 @@
 # define INSTALL_LOCATION_APP here
 #INSTALL_LOCATION_APP=<fullpathname>
 
-EPICS=/home/controls/epics/R3.14.12.2
-SUPPORT=$(EPICS)/support
+# NOTE: replace the below paths to match your local installation
 
-ASYN=		$(SUPPORT)/asyn
-STREAMS=	$(SUPPORT)/StreamDevice
+ASYN=		/home/controls/prod/epics/asyn/rel4-35_20190418
+STREAMS=	/home/controls/prod/epics/StreamDevice/rel2.8.8_SNS1_20190521
 
-EPICS_BASE=$(EPICS)/base
+EPICS_BASE=     /home/controls/prod/epics/base/rel3.14.12.6_20170606
 
 #Capfast users may need the following definitions
 #CAPFAST_TEMPLATES=

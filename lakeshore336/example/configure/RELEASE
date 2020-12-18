@@ -21,15 +21,15 @@
 
 TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
-EPICS=/home/controls/epics/R3.14.12.2
-SUPPORT=$(EPICS)/support
+# NOTE: replace the below paths to match your local installation
 
-ASYN=		$(SUPPORT)/asyn
-STREAMDEVICE=	$(SUPPORT)/StreamDevice
-LAKESHORE336=	$(SUPPORT)/lakeshore/lakeshore336
-AUTOSAVE=       $(SUPPORT)/autosave
+ASYN=		/home/controls/prod/epics/asyn/rel4-35_20190418
+STREAMS=	/home/controls/prod/epics/StreamDevice/rel2.8.8_SNS1_20190521
+LAKESHORE336=   /SNS/users/mkp/github/lakeshore/lakeshore336
+BUSY=           /home/controls/prod/epics/busy/rel1-6_20190520
+AUTOSAVE=       /home/controls/prod/epics/autosave/rel5-5_20170606
 
-EPICS_BASE=$(EPICS)/base
+EPICS_BASE=     /home/controls/prod/epics/base/rel3.14.12.6_20170606
 
 # Set RULES here if you want to take build rules from somewhere
 # other than EPICS_BASE:
