@@ -304,3 +304,9 @@ setINNAME {
   out "INNAME \$1,\"%s\"";
   @init { getINNAME; }
 }
+
+# /// Set the input curve number
+setINCRV {
+   out "INCRV \$1,%d";
+   @init { getINCRV; }
+}

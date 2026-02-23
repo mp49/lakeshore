@@ -223,6 +223,19 @@ record(mbbi, "$(P):RDGST$(INDEX)") {
 }
 
 ##
+## Set the input curve number
+##
+record(longout, "$(P):INCRV_S$(INDEX)") {
+  field(DESC, "Set Input $(INDEX) Curve Number")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(OUT, "@ls336.proto setINCRV($(INPUT)) $(PORT) $(ADDR)")
+  field(DRVH, "59")  # Highest curve number
+  field(DRVL, "0")  # No curve
+  field(FLNK, "$(P):INCRV$(INDEX).PROC CA")
+}
+
+##
 ## Read the input curve number
 ##
 record(longin, "$(P):INCRV$(INDEX)") {
