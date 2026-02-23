@@ -234,6 +234,82 @@ record(longin, "$(P):INCRV$(INDEX)") {
 
 
 ##
+## Set the input type information.
+## NOTE: you need to manually process this record to update the hardware
+## NOTE: the last part of the record name is hard coded into protocol file.
+##
+record(bo, "$(P):INTYPE_S$(INDEX)") {
+  field(DESC, "Set Input $(INDEX) Type Params")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(OUT, "@ls336.proto setINTYPE($(INPUT),$(P):INTYPE_S$(INDEX)) $(PORT) $(ADDR)")
+  field(FLNK, "$(P):INTYPE$(INDEX).PROC CA")
+}
+
+##
+## Set the rest of the input type params.
+## NOTE: you need to manually process INTYPE_S$(INDEX) to update the hardware
+## NOTE: the last part of the record names are hard coded into protocol file.
+##
+record(mbbo, "$(P):INTYPE_S$(INDEX)_S") {
+  field(DESC, "Set Input $(INDEX) Sensor Type")
+  field(ZRST, "Disabled")
+  field(ZRVL, "0")
+  field(ONST, "Diode")
+  field(ONVL, "1")
+  field(TWST, "Platinum RTD")
+  field(TWVL, "2")
+  field(THST, "NTC RTD")
+  field(THVL, "3")
+  field(FRST, "Thermocouple")
+  field(FRVL, "4")
+  field(FVST, "Capacitance")
+  field(FVVL, "5")
+}
+record(bo, "$(P):INTYPE_S$(INDEX)_AR") {
+  field(DESC, "Set Input $(INDEX) Auto Range")
+  field(ZNAM, "Off")
+  field(ONAM, "On")
+}
+record(mbbo, "$(P):INTYPE_S$(INDEX)_R") {
+  field(DESC, "Set Input $(INDEX) Range")
+  field(ZRST, "10 Ohm / 2.5V / 50mV")
+  field(ZRVL, "0")
+  field(ONST, "30 Ohm / 10V")
+  field(ONVL, "1")
+  field(TWST, "100 Ohm")
+  field(TWVL, "2")
+  field(THST, "300 Ohm")
+  field(THVL, "3")
+  field(FRST, "1 KOhm")
+  field(FRVL, "4")
+  field(FVST, "3 KOhm")
+  field(FVVL, "5")
+  field(SXST, "10 KOhm")
+  field(SXVL, "6")
+  field(SVST, "30 KOhm")
+  field(SVVL, "7")
+  field(EIST, "100 KOhm")
+  field(EIVL, "8")
+}
+record(bo, "$(P):INTYPE_S$(INDEX)_C") {
+  field(DESC, "Set Input $(INDEX) Compensation")
+  field(ZNAM, "Off")
+  field(ONAM, "On")
+}
+record(mbbo, "$(P):INTYPE_S$(INDEX)_U") {
+  field(DESC, "Set Input $(INDEX) Units")
+  field(ZRST, "None")
+  field(ZRVL, "0")
+  field(ONST, "Kelvin")
+  field(ONVL, "1")
+  field(TWST, "Celsius")
+  field(TWVL, "2")
+  field(THST, "Sensor")
+  field(THVL, "3")
+}
+
+##
 ## Read the input type information.
 ## NOTE: the last part of the record name is hard coded into protocol file. 
 ##
