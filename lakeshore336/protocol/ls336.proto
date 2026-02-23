@@ -311,6 +311,12 @@ setINNAME {
   @init { getINNAME; }
 }
 
+# /// Set the input curve number
+setINCRV {
+   out "INCRV \$1,%d";
+   @init { getINCRV; }
+}
+   
 # /// Set the input temperature limit in Kelvin
 setTLIMIT {
    out "TLIMIT \$1, %d";
