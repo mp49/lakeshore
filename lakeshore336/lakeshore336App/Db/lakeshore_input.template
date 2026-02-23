@@ -122,6 +122,36 @@ record(stringin, "$(P):INNAME$(INDEX)") {
 }
 
 ##
+## Set temperature limit for input $(INDEX)
+##
+record(ao, "$(P):TLIMIT_S$(INDEX)") {
+  field(DESC, "Set Input $(INDEX) Temperature Limit")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(OUT, "@ls336.proto setTLIMIT($(INPUT)) $(PORT) $(ADDR)")
+  field(PREC, "0")
+  field(EGU, "K")
+  field(DRVH, "2999")  # Max limit per manual
+  field(DRVL, "0")  # Min limit (0 = Off)
+  field(FLNK, "$(P):TLIMIT$(INDEX).PROC CA")
+}
+
+##
+## Read the temperature limit for input $(INDEX) in Kelvin.
+##
+record(ai, "$(P):TLIMIT$(INDEX)") {
+  field(DESC, "Input $(INDEX) Temperature Limit")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(INP, "@ls336.proto getTLIMIT($(INPUT)) $(PORT) $(ADDR)")
+  field(SCAN, "$(SCAN) second")
+  field(PREC, "0")
+  field(EGU, "K")
+  field(LSV, "MINOR")
+  field(LOW, "0")  # 0 = Off
+}
+
+##
 ## Read the high alarm status for input $(INDEX).
 ## This also populates ALARM$(INDEX)_LOW
 ##
@@ -220,6 +250,19 @@ record(mbbi, "$(P):RDGST$(INDEX)") {
   field(SCAN, "$(SCAN) second")  
   field(INP, "@ls336.proto getRDGST($(INPUT)) $(PORT) $(ADDR)")
   info(archive, "Monitor, 00:00:01, VAL")   
+}
+
+##
+## Set the input curve number
+##
+record(longout, "$(P):INCRV_S$(INDEX)") {
+  field(DESC, "Set Input $(INDEX) Curve Number")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(OUT, "@ls336.proto setINCRV($(INPUT)) $(PORT) $(ADDR)")
+  field(DRVH, "59")  # Highest curve number
+  field(DRVL, "0")  # No curve
+  field(FLNK, "$(P):INCRV$(INDEX).PROC CA")
 }
 
 ##

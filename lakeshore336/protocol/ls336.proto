@@ -174,6 +174,12 @@ getINNAME {
    in "%#s";
 }
 
+# /// Read the input temperature limit in Kelvin
+getTLIMIT {
+   out "TLIMIT? \$1";
+   in "%d"
+}
+
 
 
 # /// Read the alarm status
@@ -310,4 +316,16 @@ setINNAME {
 setINTYPE {
    out "INTYPE \$1,%(\$2_S)d,%(\$2_AR)d,%(\$2_R)d,%(\$2_C)d,%(\$2_U)d";
    @init { getINTYPE; }
+}
+
+# /// Set the input curve number
+setINCRV {
+   out "INCRV \$1,%d";
+   @init { getINCRV; }
+}
+   
+# /// Set the input temperature limit in Kelvin
+setTLIMIT {
+   out "TLIMIT \$1, %d";
+   @init { getTLIMIT; }
 }
