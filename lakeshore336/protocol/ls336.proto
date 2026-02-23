@@ -311,6 +311,13 @@ setINNAME {
   @init { getINNAME; }
 }
 
+# /// Set the input type params. I put the ends of the PV names here
+# /// to make the initial record OUT link short.
+setINTYPE {
+   out "INTYPE \$1,%(\$2_S)d,%(\$2_AR)d,%(\$2_R)d,%(\$2_C)d,%(\$2_U)d";
+   @init { getINTYPE; }
+}
+
 # /// Set the input curve number
 setINCRV {
    out "INCRV \$1,%d";
