@@ -122,6 +122,36 @@ record(stringin, "$(P):INNAME$(INDEX)") {
 }
 
 ##
+## Set temperature limit for input $(INDEX)
+##
+record(ao, "$(P):TLIMIT_S$(INDEX)") {
+  field(DESC, "Set Input $(INDEX) Temperature Limit")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(OUT, "@ls336.proto setTLIMIT($(INPUT)) $(PORT) $(ADDR)")
+  field(PREC, "0")
+  field(EGU, "K")
+  field(DRVH, "2999")  # Max limit per manual
+  field(DRVL, "0")  # Min limit (0 = Off)
+  field(FLNK, "$(P):TLIMIT$(INDEX).PROC CA")
+}
+
+##
+## Read the temperature limit for input $(INDEX) in Kelvin.
+##
+record(ai, "$(P):TLIMIT$(INDEX)") {
+  field(DESC, "Input $(INDEX) Temperature Limit")
+  field(DTYP, "stream")
+  field(SDIS, "$(DISABLE)")
+  field(INP, "@ls336.proto getTLIMIT($(INPUT)) $(PORT) $(ADDR)")
+  field(SCAN, "$(SCAN) second")
+  field(PREC, "0")
+  field(EGU, "K")
+  field(LSV, "MINOR")
+  field(LOW, "0")  # 0 = Off
+}
+
+##
 ## Read the high alarm status for input $(INDEX).
 ## This also populates ALARM$(INDEX)_LOW
 ##
