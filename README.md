@@ -66,6 +66,12 @@ Also add associated GUI support to the OPI files.
 * Remove hysterisis setting on alarms.
 * Add OPI support for the above.
 
+1-6:
+* Add support for setting and reading input temperature limit.
+* Add support for setting input curve number.
+* Add support for setting input type parameters.
+* Fix "Celsius" typo in operator display parameters.
+
 ### Building lakeshore
 
 The lakeshore336 directory can be build as a standard EPICS support
