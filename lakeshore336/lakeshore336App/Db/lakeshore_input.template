@@ -420,7 +420,7 @@ record(mbbi, "$(P):INTYPE$(INDEX)_U") {
   field(ZRVL, "0")
   field(ONST, "Kelvin")
   field(ONVL, "1")
-  field(TWST, "Celcius")
+  field(TWST, "Celsius")
   field(TWVL, "2")
   field(THST, "Sensor")
   field(THVL, "3")
